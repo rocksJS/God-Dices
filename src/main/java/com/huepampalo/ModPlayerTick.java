@@ -1,10 +1,12 @@
 package com.huepampalo;
 
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.component.CustomData;
@@ -71,13 +73,27 @@ public class ModPlayerTick {
 
                     // Телепортируем игрока
                     player.teleportTo(target.x, target.y + 1.0, target.z);
+                    ModCounters.addTeleportCounter();
+                    ModServerMessages.chatMessageAfterTeleport(player, ModCounters.getTeleportCounter());
+
+                    // player.sendSystemMessage(Component.literal("Телепортации: " +
+                    // teleportCount));
 
                     // Звук телепорта (можно убрать, если не нужен)
                     player.level().playSound(null, player.blockPosition(),
                             SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 0.6f, 1.4f);
                 }
+
+                // === 4. Эффект и опыт ===
+                player.level().addFreshEntity(new ExperienceOrb(
+                        player.level(), player.getX(), player.getY(), player.getZ(), 5));
             }
         }
+
+        // Логгирование
+
+        // тут логгирование сколько раз вызвана команда
+
     }
 
     public static void cleanGlitches(ServerPlayer player) {
