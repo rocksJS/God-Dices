@@ -197,7 +197,7 @@ public class HuepampaloItem extends Item {
     public void inventoryTick(ItemStack stack, Level level, Entity entity,
             int slot, boolean selected) {
 
-        // Механика переброса кости при выборе кости в слот
+        // Механика переброса кости при выборе
 
         if (level.isClientSide)
             return;
