@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AAA",
+    " B ",
+    " A "
+  ],
+  "key": {
+    "A": { "item": "minecraft:diamond" },
+    "B": { "item": "minecraft:stick" }
+  },
+  "result": {
+    "item": "huepampalo-mod:huepampalo_item",
+    "count": 1
+  }
+}

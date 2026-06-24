@@ -1,19 +1,19 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "equipment",
   "pattern": [
-    "BBB",
-    " S ",
-    " S "
+    " E ",
+    " E ",
+    " E "
   ],
   "key": {
-    "B": {
-      "item": "huepampalo-mod:venom_block"
-    },
-    "S": {
-      "item": "minecraft:stick"
-    }
+    "E": [
+      "minecraft:emerald"
+    ]
   },
   "result": {
-    "item": "huepampalo-mod:venom_pickaxe"
-  }
+    "id": "huepampalo-mod:venom_pickaxe",
+    "count": 1
+  },
+  "show_notification": true
 }

@@ -50,6 +50,7 @@ public class HuepampaloMod implements ModInitializer {
 				id("huepampalo_item"),
 				HUEPAMPALO_ITEM);
 		// ModPlayerTick.register();
+
 		ModBlocks.register();
 		ModItems.register();
 	}
