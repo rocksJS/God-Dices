@@ -16,16 +16,17 @@ import net.minecraft.world.phys.Vec3;
 
 public class ModPlayerTick {
 
-    public static final ResourceLocation JUMP_SPEED_ID = ResourceLocation.fromNamespaceAndPath("huepampalo",
+    public static final ResourceLocation TELEPORT_GLITCHES_ID = ResourceLocation.fromNamespaceAndPath("huepampalo",
             "jump_speed_boost");
 
-    public static void teleportWithGlitchesDice(ServerPlayer player) {
+    public static void addTickGliches(ServerPlayer player) {
 
         // Get Dice Face
         int diceFace = (player.getMainHandItem().getItem() instanceof HuepampaloItem ? player.getMainHandItem()
                 : player.getOffhandItem()).getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag()
                 .getInt("DiceFace");
 
+        // Проверка перед входом в цикл телепорта
         if (diceFace == 1) {
             // На всякий случай, чтобы не было нулевого множителя
 
@@ -41,9 +42,9 @@ public class ModPlayerTick {
 
             // === 1. Ускорение в воздухе (AttributeModifier) ===
             var attribute = player.getAttribute(Attributes.MOVEMENT_SPEED);
-            if (attribute != null && !attribute.hasModifier(JUMP_SPEED_ID)) {
+            if (attribute != null && !attribute.hasModifier(TELEPORT_GLITCHES_ID)) {
                 AttributeModifier modifier = new AttributeModifier(
-                        JUMP_SPEED_ID,
+                        TELEPORT_GLITCHES_ID,
                         1.0,
                         AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
                 attribute.addTransientModifier(modifier);
@@ -100,6 +101,26 @@ public class ModPlayerTick {
             }
         }
 
+        if (diceFace == 4) {
+
+            // Теперь на 4 уничтожаются блоки когда прыгаешь
+            // if
+            boolean isHoldingItem = player.getMainHandItem().getItem() instanceof HuepampaloItem
+                    || player.getOffhandItem().getItem() instanceof HuepampaloItem;
+
+            // Если игрок на земле — убираем каждотиковый глитч
+            if (player.onGround()) {
+                cleanGlitches(player);
+                return;
+            }
+
+            BlockHitResult hit = (BlockHitResult) player.pick(6.5, 0, false);
+            if (hit.getType() == HitResult.Type.BLOCK) {
+                player.level().destroyBlock(hit.getBlockPos(), isHoldingItem);
+            }
+
+        }
+
         // Логгирование
 
         // тут логгирование сколько раз вызвана команда
@@ -134,7 +155,7 @@ public class ModPlayerTick {
     public static void cleanGlitches(ServerPlayer player) {
         var attribute = player.getAttribute(Attributes.MOVEMENT_SPEED);
         if (attribute != null) {
-            attribute.removeModifier(JUMP_SPEED_ID);
+            attribute.removeModifier(TELEPORT_GLITCHES_ID);
         }
     }
 }

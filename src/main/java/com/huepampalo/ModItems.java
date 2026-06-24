@@ -1,29 +1,21 @@
-// package com.huepampalo;
+package com.huepampalo;
 
-// import net.minecraft.core.Registry;
-// import net.minecraft.core.registries.BuiltInRegistries;
-// import net.minecraft.world.item.Item;
+import com.huepampalo.HuepampaloMod;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 
-// public class ModItems {
+public class ModItems {
 
-// // === Здесь объявляем все предметы ===
-// public static final Item HUEPAMPALO_ITEM = new HuepampaloItem(
-// new Item.Properties().stacksTo(1));
+    public static final Item VENOM_PICKAXE = registerItem("venom_pickaxe", new VenomPickaxe());
 
-// // Пример будущего предмета:
-// // public static final Item ANOTHER_ITEM = new AnotherItem(...);
+    private static Item registerItem(String name, Item item) {
+        return Registry.register(BuiltInRegistries.ITEM,
+                ResourceLocation.fromNamespaceAndPath(HuepampaloMod.MOD_ID, name), item);
+    }
 
-// public static void register() {
-// System.out.println("Регистрируем предмет huepampalo_item...");
-
-// Registry.register(BuiltInRegistries.ITEM,
-// HuepampaloMod.id("huepampalo_item"), HUEPAMPALO_ITEM);
-
-// System.out.println("Предмет huepampalo_item успешно зарегистрирован!");
-
-// // Здесь будешь добавлять новые предметы:
-// // Registry.register(BuiltInRegistries.ITEM,
-// HuepampaloMod.id("another_item"),
-// // ANOTHER_ITEM);
-// }
-// }
+    public static void register() {
+        System.out.println("Venom Items registered!");
+    }
+}

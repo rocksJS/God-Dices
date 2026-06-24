@@ -15,12 +15,15 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BoneMealItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.component.CustomModelData;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 
@@ -50,6 +53,25 @@ public class HuepampaloItem extends Item {
             if (!stack.has(DataComponents.CUSTOM_DATA)) {
                 stack.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(1));
             }
+
+            if (currentFace == 2) {
+
+                BlockHitResult hitResult = (BlockHitResult) serverPlayer.pick(100.0D, 0.0F, false);
+
+                if (hitResult.getType() == HitResult.Type.BLOCK) {
+
+                    BlockPos pos = hitResult.getBlockPos();
+                    if (level.getBlockState(pos).is(Blocks.GRASS_BLOCK)) {
+                        BoneMealItem.growCrop(new ItemStack(Items.BONE_MEAL), level, pos);
+                    }
+
+                }
+            }
+
+            if (currentFace == 3) {
+                // на 5 сделать чтобы каждый тик пропадали блоки куда смотришь в прыжке
+            }
+
             if (currentFace == 5) {
                 BlockHitResult hitResult = (BlockHitResult) serverPlayer.pick(100.0D, 0.0F, false);
 
@@ -155,6 +177,9 @@ public class HuepampaloItem extends Item {
             int currentFace = tag.getInt("DiceFace");
             if (currentFace == 0)
                 currentFace = 1;
+
+            // Модель сохранения грани //
+
             // Рандомная грань
             int newFace = new Random().nextInt(6) + 1;
 

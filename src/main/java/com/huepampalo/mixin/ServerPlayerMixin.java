@@ -20,8 +20,10 @@ public class ServerPlayerMixin {
 
         boolean isInAir = !player.onGround();
 
+        // Применение тиков при удержании предмета и прыжке (телепорт глитч на 1
+        // референс)
         if (isHoldingItem && isInAir) {
-            ModPlayerTick.teleportWithGlitchesDice(player);
+            ModPlayerTick.addTickGliches(player);
         } else {
             ModPlayerTick.cleanGlitches(player);
         }

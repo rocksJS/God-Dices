@@ -19,7 +19,7 @@ public class GameRendererMixin {
             var attribute = mc.player.getAttribute(Attributes.MOVEMENT_SPEED);
 
             // Применяем дребезжание ТОЛЬКО если активен наш модификатор прыжка
-            if (attribute != null && attribute.hasModifier(ModPlayerTick.JUMP_SPEED_ID)) {
+            if (attribute != null && attribute.hasModifier(ModPlayerTick.TELEPORT_GLITCHES_ID)) {
                 return 1.0F;
             }
         }

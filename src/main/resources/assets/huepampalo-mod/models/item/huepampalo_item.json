@@ -45,6 +45,12 @@
         "custom_model_data": 6
       },
       "model": "huepampalo-mod:item/huepampalo_dice_model_6"
+    },
+        {
+      "predicate": {
+        "custom_model_data": 100
+      },
+      "model": "huepampalo-mod:item/huepampalo_dice_model_100"
     }
   ]
 }

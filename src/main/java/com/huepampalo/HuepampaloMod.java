@@ -8,6 +8,8 @@ import net.minecraft.world.entity.player.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.huepampalo.blocks.ModBlocks;
+
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
@@ -48,6 +50,8 @@ public class HuepampaloMod implements ModInitializer {
 				id("huepampalo_item"),
 				HUEPAMPALO_ITEM);
 		// ModPlayerTick.register();
+		ModBlocks.register();
+		ModItems.register();
 	}
 
 	// CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess,
