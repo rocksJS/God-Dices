@@ -10,6 +10,8 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LightningBolt;
@@ -24,6 +26,7 @@ import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.component.CustomModelData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 
@@ -72,61 +75,6 @@ public class HuepampaloItem extends Item {
                 // на 5 сделать чтобы каждый тик пропадали блоки куда смотришь в прыжке
             }
 
-            if (currentFace == 5) {
-                BlockHitResult hitResult = (BlockHitResult) serverPlayer.pick(100.0D, 0.0F, false);
-
-                if (hitResult.getType() == HitResult.Type.BLOCK) {
-                    BlockPos center = hitResult.getBlockPos().above();
-
-                    // 1. Первая молния сразу
-                    // сделать ее на 5 блоков ниже + чекнуть свойства молнии
-                    spawnLightning(level, center, serverPlayer);
-
-                    // 2. Через 800 мс (40 тиков) — 12 молний с разбросом
-
-                    // level.scheduleTick(center, Blocks.AIR, delay, TickPriority.NORMAL);
-
-                    CompletableFuture.delayedExecutor(1700, TimeUnit.MILLISECONDS).execute(() -> {
-                        // Этот код выполнится через 2 секунды
-                        spawnLightning(level, center, serverPlayer);
-                        spawnLightning(level, center, serverPlayer);
-                        spawnLightning(level, center, serverPlayer);
-                        spawnLightning(level, center, serverPlayer);
-                        spawnLightning(level, center, serverPlayer);
-
-                        // for (int i = 0; i < 12; i++) {
-                        // spawnLightning(level, center, serverPlayer);
-
-                        // CompletableFuture.delayedExecutor(1200, TimeUnit.MILLISECONDS).execute(() ->
-                        // {
-                        // spawnLightning(level, center, serverPlayer);
-                        // });
-                        // }
-                    });
-
-                    CompletableFuture.delayedExecutor(1750, TimeUnit.MILLISECONDS).execute(() -> {
-                        // Этот код выполнится через 2 секунды
-                        spawnLightning(level, center, serverPlayer);
-
-                    });
-
-                    CompletableFuture.delayedExecutor(1900, TimeUnit.MILLISECONDS).execute(() -> {
-                        // Этот код выполнится через 2 секунды
-                        spawnLightning(level, center, serverPlayer);
-                        spawnLightning(level, center, serverPlayer);
-
-                    });
-
-                    CompletableFuture.delayedExecutor(2000, TimeUnit.MILLISECONDS).execute(() -> {
-                        // Этот код выполнится через 2 секунды
-                        spawnLightning(level, center, serverPlayer);
-                        spawnLightning(level, center, serverPlayer);
-
-                    });
-
-                    serverPlayer.sendSystemMessage(Component.literal("§b§lМОЛНИИ!!!"));
-                }
-            }
             // // === Добавляем модификатор скорости (убираем замедление + даём ускорение)
             // ===
             // AttributeModifier speedModifier = new AttributeModifier(
@@ -204,16 +152,97 @@ public class HuepampaloItem extends Item {
                 level.playSound(null, targetPos, SoundEvents.TOTEM_USE, SoundSource.PLAYERS, 1.0F, 1.5F);
             }
 
+            if (currentFace == 5) {
+                BlockHitResult lightningHitResult = (BlockHitResult) serverPlayer.pick(100.0D, 0.0F, false);
+
+                if (lightningHitResult.getType() == HitResult.Type.BLOCK) {
+                    BlockPos center = lightningHitResult.getBlockPos().above();
+                    BlockPos below = lightningHitResult.getBlockPos().below(5);
+
+                    // 1. Первая молния сразу
+                    // сделать ее на 5 блоков ниже + чекнуть свойства молнии
+                    spawnLightning(level, below, serverPlayer, false);
+
+                    // Добавить замедление apply slowness
+                    AABB area = new AABB(
+                            center.getX() - 3, center.getY() - 2, center.getZ() - 3,
+                            center.getX() + 3, center.getY() + 3, center.getZ() + 3);
+
+                    level.getEntitiesOfClass(LivingEntity.class, area)
+                            .stream()
+                            .filter(e -> e != serverPlayer)
+                            .forEach(mob -> {
+                                mob.addEffect(new MobEffectInstance(
+                                        MobEffects.MOVEMENT_SLOWDOWN,
+                                        60,
+                                        2));
+                            });
+
+                    // 2. Через 800 мс (40 тиков) — 12 молний с разбросом
+
+                    // level.scheduleTick(center, Blocks.AIR, delay, TickPriority.NORMAL);
+
+                    CompletableFuture.delayedExecutor(1700, TimeUnit.MILLISECONDS).execute(() -> {
+                        // Этот код выполнится через 2 секунды
+                        spawnLightning(level, center, serverPlayer, true);
+                        spawnLightning(level, center, serverPlayer, true);
+                        spawnLightning(level, center, serverPlayer, true);
+                        spawnLightning(level, center, serverPlayer, true);
+                        spawnLightning(level, center, serverPlayer, true);
+
+                        // for (int i = 0; i < 12; i++) {
+                        // spawnLightning(level, center, serverPlayer);
+
+                        // CompletableFuture.delayedExecutor(1200, TimeUnit.MILLISECONDS).execute(() ->
+                        // {
+                        // spawnLightning(level, center, serverPlayer);
+                        // });
+                        // }
+                    });
+
+                    CompletableFuture.delayedExecutor(1750, TimeUnit.MILLISECONDS).execute(() -> {
+                        // Этот код выполнится через 2 секунды
+                        spawnLightning(level, center, serverPlayer, false);
+
+                    });
+
+                    CompletableFuture.delayedExecutor(1900, TimeUnit.MILLISECONDS).execute(() -> {
+                        // Этот код выполнится через 2 секунды
+                        spawnLightning(level, center, serverPlayer, false);
+                        spawnLightning(level, center, serverPlayer, false);
+
+                    });
+
+                    CompletableFuture.delayedExecutor(2000, TimeUnit.MILLISECONDS).execute(() -> {
+                        // Этот код выполнится через 2 секунды
+                        spawnLightning(level, center, serverPlayer, false);
+                        spawnLightning(level, center, serverPlayer, false);
+
+                    });
+
+                    serverPlayer.sendSystemMessage(Component.literal("§b§lМОЛНИИ!!!"));
+                }
+            }
+
         }
     };
 
-    private void spawnLightning(Level level, BlockPos pos, ServerPlayer cause) {
+    private void spawnLightning(Level level, BlockPos pos, ServerPlayer cause, boolean isRandom) {
         LightningBolt lightning = new LightningBolt(EntityType.LIGHTNING_BOLT, level);
 
-        double offsetX = (level.random.nextDouble() - 0.5) * 6;
-        double offsetZ = (level.random.nextDouble() - 0.5) * 6;
+        double x = pos.getX() + 0.5;
+        double z = pos.getZ() + 0.5;
+        double y = pos.getY();
 
-        lightning.setPos(pos.getX() + 0.5 + offsetX, pos.getY(), pos.getZ() + 0.5 + offsetZ);
+        if (isRandom) {
+            double offsetX = (level.random.nextDouble() - 0.5) * 3;
+            double offsetZ = (level.random.nextDouble() - 0.5) * 3;
+
+            x += offsetX;
+            z += offsetZ;
+        }
+
+        lightning.setPos(x, y, z);
         lightning.setCause(cause);
         level.addFreshEntity(lightning);
     }

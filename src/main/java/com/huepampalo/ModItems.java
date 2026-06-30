@@ -7,6 +7,7 @@ import net.minecraft.world.item.Item;
 public class ModItems {
 
     public static Item VENOM_PICKAXE;
+    public static Item DARK_SISTER;
 
     public static void register() {
 
@@ -15,6 +16,9 @@ public class ModItems {
                 HuepampaloMod.id("venom_pickaxe"),
                 new VenomPickaxe());
 
-        System.out.println("Items registered!");
+        DARK_SISTER = Registry.register(
+                BuiltInRegistries.ITEM,
+                HuepampaloMod.id("dark_sister"),
+                new DarkSister());
     }
 }
