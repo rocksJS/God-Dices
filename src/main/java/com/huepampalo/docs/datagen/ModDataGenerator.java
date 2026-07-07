@@ -2,6 +2,8 @@ package com.huepampalo.docs.datagen;
 
 import com.huepampalo.ModConfiguredFeatures;
 import com.huepampalo.ModPlacedFeatures;
+import com.huepampalo.data.ModLootTableProvider;
+
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -28,6 +30,7 @@ public class ModDataGenerator implements DataGeneratorEntrypoint {
     public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator) {
         FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
         pack.addProvider(ModWorldGenProvider::new);
+        pack.addProvider(ModLootTableProvider::new);
     }
 
     private static class ModWorldGenProvider extends FabricDynamicRegistryProvider {

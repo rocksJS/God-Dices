@@ -4,8 +4,10 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
 import org.slf4j.Logger;
@@ -132,10 +134,25 @@ public class HuepampaloMod implements ModInitializer {
 				HUEPAMPALO_ITEM);
 		// ModPlayerTick.register();
 
+		// GeckoLib.initialize();
+
 		ModBlocks.register();
 		ModItems.register();
 
 		registerVenomOre();
+
+		// Регаем сервер тик для Сестры
+		// ServerTickEvents.END_SERVER_TICK.register(server -> {
+
+		// for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+		// ModPlayerTick.tickDelayedHits(player);
+		// }
+
+		// });
+
+		// Сверху рабочий код бтв.
+
+		// ServerTickEvents.END_SERVER_TICK.register(DarkSister::onServerTick);
 		// WorldGeneration.generate();
 		// ModWorldGen.register();
 

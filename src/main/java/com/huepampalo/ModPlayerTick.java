@@ -1,11 +1,16 @@
 package com.huepampalo;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.ExperienceOrb;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.component.CustomData;
@@ -16,8 +21,41 @@ import net.minecraft.world.phys.Vec3;
 
 public class ModPlayerTick {
 
+    public static final Map<LivingEntity, Integer> delayedHits = new HashMap<>();
+
     public static final ResourceLocation TELEPORT_GLITCHES_ID = ResourceLocation.fromNamespaceAndPath("huepampalo",
             "jump_speed_boost");
+
+    // public static void tickDelayedHits(ServerPlayer player) {
+
+    // Iterator<Map.Entry<LivingEntity, Integer>> it =
+    // delayedHits.entrySet().iterator();
+
+    // while (it.hasNext()) {
+
+    // var entry = it.next();
+    // LivingEntity entity = entry.getKey();
+    // int ticks = entry.getValue() - 1;
+
+    // if (ticks <= 0) {
+
+    // if (entity != null && entity.isAlive() && !entity.isRemoved()) {
+    // entity.hurt(
+    // entity.level().damageSources().generic(),
+    // 20.0F);
+    // }
+
+    // it.remove();
+
+    // } else {
+    // entry.setValue(ticks);
+    // }
+    // }
+
+    // // ModServerInteractions.chatMessageAfterTeleport(player, 0, "jalup");
+
+    // // Задержка второго удара для катаны, нужно переписатьыы
+    // }
 
     public static void addTickGliches(ServerPlayer player) {
 
