@@ -102,6 +102,8 @@ public class HuepampaloMod implements ModInitializer {
 		// GenerationStep.Decoration.UNDERGROUND_ORES,
 		// placedKey);
 
+		// Мёртвый код
+
 		BiomeModifications.addFeature(
 				BiomeSelectors.foundInOverworld(),
 				GenerationStep.Decoration.UNDERGROUND_ORES,

@@ -59,6 +59,7 @@ public class HuepampaloItem extends Item {
 
             if (currentFace == 2) {
 
+                serverPlayer.setHealth(serverPlayer.getMaxHealth());
                 BlockHitResult hitResult = (BlockHitResult) serverPlayer.pick(100.0D, 0.0F, false);
 
                 if (hitResult.getType() == HitResult.Type.BLOCK) {
@@ -137,7 +138,7 @@ public class HuepampaloItem extends Item {
             stack.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(newFace));
 
             // Эффекты
-            serverPlayer.setHealth(serverPlayer.getMaxHealth());
+  
             serverPlayer.sendSystemMessage(Component.literal("§aКости показали: §e" + newFace));
 
             if (newFace == 6) {
