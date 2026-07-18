@@ -14,6 +14,8 @@ public class HuepampaloModClient implements ClientModInitializer {
 		// BlockRenderLayerMap.INSTANCE.putItem(
 		// ModItems.DARK_SISTER,
 		// RenderType.isFoil());
+		ClientNetworking.register();
+		SoulHealthHud.register();
 	}
 }
 

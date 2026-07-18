@@ -2,9 +2,7 @@
   "required": true,
   "package": "com.huepampalo.mixin",
   "compatibilityLevel": "JAVA_21",
-  "mixins": [
-    "ServerPlayerMixin"
-  ],
+  "mixins": ["ServerPlayerMixin"],
   "injectors": {
     "defaultRequire": 1
   }

@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.huepampalo.blocks.ModBlocks;
+import com.huepampalo.network.ModPackets;
 
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -122,7 +123,7 @@ public class HuepampaloMod implements ModInitializer {
 							.executes(context -> {
 								if (context.getSource().getEntity() instanceof Player player) {
 									player.setHealth(player.getMaxHealth());
-									player.sendSystemMessage(Component.literal("Хуепампало веном!"));
+									// player.sendSystemMessage(Component.literal("Хуепампало веном!"));
 									return 1;
 								}
 								return 0;
@@ -140,6 +141,8 @@ public class HuepampaloMod implements ModInitializer {
 
 		ModBlocks.register();
 		ModItems.register();
+		ModEvents.register();
+		ModPackets.register();
 
 		registerVenomOre();
 

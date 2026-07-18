@@ -10,18 +10,19 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ServerPlayer.class)
 public class ServerPlayerMixin {
-
     @Inject(method = "doTick", at = @At("HEAD"))
     private void onPlayerTick(CallbackInfo ci) {
+
         ServerPlayer player = (ServerPlayer) (Object) this;
+
+        // Бонус здоровья должен обновляться каждый тик
+        ModPlayerTick.tickBonusHealth(player);
 
         boolean isHoldingItem = player.getMainHandItem().getItem() instanceof HuepampaloItem
                 || player.getOffhandItem().getItem() instanceof HuepampaloItem;
 
         boolean isInAir = !player.onGround();
 
-        // Применение тиков при удержании предмета и прыжке (телепорт глитч на 1
-        // референс)
         if (isHoldingItem && isInAir) {
             ModPlayerTick.addTickGliches(player);
         } else {

@@ -1,8 +1,13 @@
 package com.huepampalo;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+
+import com.huepampalo.classes.SoulCage;
+import com.huepampalo.particles.SoulParticle;
 
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleOptions;
@@ -38,6 +43,19 @@ import software.bernie.geckolib.animation.AnimatableManager.ControllerRegistrar;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class DarkSister extends SwordItem implements GeoItem {
+
+        public static final List<SoulCage> SOUL_CAGES = new ArrayList<>();
+
+        public static final Map<UUID, Float> soulHealth = new HashMap<>();
+
+        public static final List<SoulParticle> SOUL_PARTICLES = new ArrayList<>();
+
+        public static final Map<UUID, Float> pendingMaxHealth = new HashMap<>();
+
+        public static final Map<UUID, Double> bonusHealth = new HashMap<>();
+        public static final Map<UUID, Integer> bonusHealthTimer = new HashMap<>();
+
+        public static final UUID BONUS_HEALTH_UUID = UUID.fromString("8d8f5a3d-4d9e-4e8b-b74e-7d6d90d0c001");
 
         public static final Map<Player, Boolean> charging = new HashMap<>();
 
@@ -564,8 +582,17 @@ public class DarkSister extends SwordItem implements GeoItem {
                                                 teleport.z);
                         }
 
+                        // /* Грань 3 */
+
                         if (dice == 3) {
                                 spawnParticleCage(level, player);
+
+                                // Добавляем в список сущностей соул кейж.
+                                SOUL_CAGES.add(new SoulCage(
+                                                player.getUUID(),
+                                                player.position().add(player.getLookAngle().normalize().scale(6)),
+                                                5,
+                                                100)); // 5 секунд
                         }
 
                         if (dice == 5) {

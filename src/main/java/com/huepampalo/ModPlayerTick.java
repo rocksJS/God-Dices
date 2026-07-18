@@ -3,6 +3,7 @@ package com.huepampalo;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.UUID;
 
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
@@ -11,6 +12,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.component.CustomData;
@@ -25,6 +27,10 @@ public class ModPlayerTick {
 
     public static final ResourceLocation TELEPORT_GLITCHES_ID = ResourceLocation.fromNamespaceAndPath("huepampalo",
             "jump_speed_boost");
+
+    public static final ResourceLocation BONUS_HEALTH_ID = ResourceLocation.fromNamespaceAndPath(
+            "huepampalo",
+            "dark_sister_bonus_health");
 
     // public static void tickDelayedHits(ServerPlayer player) {
 
@@ -188,6 +194,80 @@ public class ModPlayerTick {
             player.teleportTo(target.x, target.y + 1.0, target.z);
         }
 
+    }
+
+    public static void tickBonusHealth(ServerPlayer player) {
+
+        UUID id = player.getUUID();
+
+        if (!DarkSister.bonusHealthTimer.containsKey(id)) {
+            return;
+        }
+
+        AttributeInstance attribute = player.getAttribute(Attributes.MAX_HEALTH);
+        if (attribute == null)
+            return;
+
+        // Уменьшаем только таймер
+        int timer = DarkSister.bonusHealthTimer.get(id) - 1;
+
+        // Таймер закончился
+        if (timer <= 0) {
+
+            // Удаляем бонус
+            DarkSister.bonusHealth.remove(id);
+            DarkSister.bonusHealthTimer.remove(id);
+
+            // Удаляем модификатор максимального здоровья
+            attribute.removeModifier(BONUS_HEALTH_ID);
+
+            // Если текущее здоровье больше нового максимума,
+            // ограничиваем его новым максимумом
+            float newMaxHealth = (float) attribute.getValue();
+
+            if (player.getHealth() > newMaxHealth) {
+                player.setHealth(newMaxHealth);
+            }
+
+            return;
+        }
+
+        // Сохраняем обновлённый таймер
+        DarkSister.bonusHealthTimer.put(id, timer);
+
+        // Обновляем модификатор максимального здоровья
+        attribute.removeModifier(BONUS_HEALTH_ID);
+
+        double bonus = DarkSister.bonusHealth.getOrDefault(id, 0.0);
+
+        if (bonus > 0) {
+            attribute.addTransientModifier(
+                    new AttributeModifier(
+                            BONUS_HEALTH_ID,
+                            bonus,
+                            AttributeModifier.Operation.ADD_VALUE));
+        }
+    }
+
+    public static void tickSoulHealth(ServerPlayer player) {
+
+        if (player.tickCount % 10 != 0)
+            return;
+
+        UUID id = player.getUUID();
+
+        float soul = DarkSister.soulHealth.getOrDefault(id, 0F);
+
+        if (soul > 0) {
+
+            soul -= 1;
+
+            if (soul <= 0) {
+                DarkSister.soulHealth.remove(id);
+            } else {
+                DarkSister.soulHealth.put(id, soul);
+            }
+        }
     }
 
     public static void cleanGlitches(ServerPlayer player) {
