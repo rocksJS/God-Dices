@@ -2,7 +2,7 @@ package com.huepampalo.client.mixin;
 
 import com.huepampalo.DarkSister;
 import com.huepampalo.HuepampaloItem;
-
+import com.huepampalo.client.render.SwordSparkManager;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 
@@ -89,25 +89,99 @@ public class ItemInHandRendererMixin {
                 if (stack.getItem() instanceof DarkSister
                                 && hand == InteractionHand.MAIN_HAND) {
 
-                        /*
-                         * ПКМ - стойка катаны
-                         */
+                        if (!player.isUsingItem()) {
+
+                                // Логика активации спавна партиклов
+                                SwordSparkManager.tick();
+
+                                if (RANDOM.nextInt(2) == 0) {
+                                        SwordSparkManager.spawn();
+                                }
+                                if (swingProgress > 0.1f && RANDOM.nextInt(2) == 0) {
+                                        SwordSparkManager.spawn();
+                                }
+
+                                SwordSparkManager.render(poseStack, buffer, combinedLight);
+                        }
+
+                        // ... весь остальной код с poseStack (анимации) ...
+
+                        Vec3 eye = player.getEyePosition();
+
+                        Vec3 forward = player.getLookAngle();
+                        Vec3 right = forward.cross(new Vec3(0, 1, 0)).normalize();
+                        Vec3 up = new Vec3(0, 1, 0);
+
+                        Vec3 base = eye
+                                        .add(forward.scale(0.45)) // позиция вперед
+                                        .add(right.scale(0.52)) // позиция вправо
+                                        .add(up.scale(-0.15)); // позиция вверх
+
+                        // В цикле - 2 это кол-во частиц спавнящихся за тик
+                        for (int i = 0; i < 1; i++) {
+                                // позиционирование частиц в цикле
+                                double t = 0;
+
+                                Vec3 p = base.add(forward.scale(t * 0.7));
+
+                                // if (player.tickCount % 5 == 0) {
+
+                                // player.level().addParticle(
+                                // ParticleTypes.ENCHANT,
+                                // p.x + (RANDOM.nextDouble() - 0.5) * 0.05,
+                                // p.y + (RANDOM.nextDouble() - 0.5) * 0.05,
+                                // p.z + (RANDOM.nextDouble() - 0.5) * 0.05,
+                                // 0,
+                                // 0,
+                                // 0);
+                                // }
+                        }
+
+                        // SwordSparkManager.spawn();
 
                         if (player.isUsingItem()) {
 
                                 if (darkSisterUseTime > 0.5F) {
 
-                                        Vec3 pos = player.getEyePosition()
-                                                        .add(player.getLookAngle().scale(0.8));
+                                        // Vec3 eye = player.getEyePosition();
 
-                                        player.level().addParticle(
-                                                        ParticleTypes.ENCHANT,
-                                                        pos.x,
-                                                        pos.y,
-                                                        pos.z,
-                                                        0,
-                                                        0.05,
-                                                        0);
+                                        // Vec3 forward = player.getLookAngle();
+                                        // Vec3 right = forward.cross(new Vec3(0, 1, 0)).normalize();
+                                        // Vec3 up = new Vec3(0, 1, 0);
+
+                                        // Vec3 base = eye
+                                        // .add(forward.scale(0.45))
+                                        // .add(right.scale(0.32))
+                                        // .add(up.scale(-0.35));
+
+                                        // for (int i = 0; i < 4; i++) {
+
+                                        // double t = i / 3.0;
+
+                                        // Vec3 p = base.add(forward.scale(t * 0.7));
+
+                                        // player.level().addParticle(
+                                        // ParticleTypes.ENCHANT,
+                                        // p.x + (RANDOM.nextDouble() - 0.5) * 0.05,
+                                        // p.y + (RANDOM.nextDouble() - 0.5) * 0.05,
+                                        // p.z + (RANDOM.nextDouble() - 0.5) * 0.05,
+                                        // 0,
+                                        // 0,
+                                        // 0);
+                                        // }
+
+                                        // // Спавнит партиклы на прицеле. Должен спавнить партиклы около катаны
+                                        // Vec3 pos = player.getEyePosition()
+                                        // .add(player.getLookAngle().scale(0.8));
+
+                                        // player.level().addParticle(
+                                        // ParticleTypes.ENCHANT,
+                                        // pos.x,
+                                        // pos.y,
+                                        // pos.z,
+                                        // 0,
+                                        // 0.05,
+                                        // 0);
                                 }
 
                                 if (!darkSisterUsing) {
@@ -390,5 +464,6 @@ public class ItemInHandRendererMixin {
                                 darkSisterSwingStarted = false;
                         }
                 }
+
         }
 }

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import com.huepampalo.classes.SoulCage;
+import com.huepampalo.utility.SoulCage;
 import com.huepampalo.particles.SoulParticle;
 
 import net.minecraft.core.component.DataComponents;
@@ -476,6 +476,8 @@ public class DarkSister extends SwordItem implements GeoItem {
 
                 ItemStack stack = player.getItemInHand(hand);
 
+                //
+
                 player.startUsingItem(hand);
 
                 return InteractionResultHolder.consume(stack);
@@ -713,4 +715,5 @@ public class DarkSister extends SwordItem implements GeoItem {
 
                 return cache;
         }
+
 }

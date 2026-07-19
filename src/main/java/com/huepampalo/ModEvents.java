@@ -1,6 +1,6 @@
 package com.huepampalo;
 
-import com.huepampalo.classes.SoulCage;
+import com.huepampalo.utility.SoulCage;
 
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.minecraft.core.particles.ParticleTypes;

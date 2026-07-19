@@ -1,4 +1,4 @@
-package com.huepampalo.classes;
+package com.huepampalo.utility;
 
 import java.util.UUID;
 
