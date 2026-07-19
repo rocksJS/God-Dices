@@ -16,7 +16,7 @@ God Dices — mod for Minecraft 1.21.1 (Fabric), that adds a several gamble-base
 - Beatutiful visual and sound effects.
 
 
-## 🃏 Установка
+## 🃏 Installation
 
 1. Download a God-Dices-1.21.1.jar из [Releases](https://github.com/rocksJS/God-Dices/releases) or [Google Drive](https://drive.google.com/file/d/1NnTv3-LJQHpaIOdUUchKyRntRuvwP18f/view?usp=sharing)
 2. Install Fabric Loader 1.21.1 + Fabric API.
